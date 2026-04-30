@@ -2,13 +2,13 @@ import { Entity, ObjectIdColumn, ObjectId, Column, CreateDateColumn } from "type
 
 @Entity()
 export class User {
-    @ObjectIdColumn() // Ne pas oublier les parenthèses ()
+    @ObjectIdColumn() 
     _id: ObjectId;
 
     @Column({ unique: true })
     email: string;
 
-    @Column({ select: false })
+    @Column()
     password: string;
 
     @CreateDateColumn()
