@@ -2,7 +2,7 @@ import { Entity, ObjectIdColumn, ObjectId, Column, CreateDateColumn } from "type
 
 @Entity()
 export class User {
-    @ObjectIdColumn() 
+    @ObjectIdColumn()
     _id: ObjectId;
 
     @Column({ unique: true })

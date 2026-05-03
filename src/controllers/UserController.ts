@@ -3,10 +3,9 @@ import { AppDataSource } from "../data-source";
 import { User } from "../entities/User";
 import { ObjectId } from "mongodb";
 
-export class AuthController {
+export class UserController {
     private static userRepository = AppDataSource.getMongoRepository(User);
 
-    // GET /users - Récupérer tous les utilisateurs
     static getAll = async (req: Request, res: Response) => {
         try {
             const users = await this.userRepository.find();
@@ -16,12 +15,10 @@ export class AuthController {
         }
     };
 
-    // GET /users/:id - Récupérer un utilisateur par ID
     static getOne = async (req: Request, res: Response) => {
         try {
             const id = req.params.id as string;
             const user = await this.userRepository.findOneBy({ _id: new ObjectId(id) } as any);
-            
             if (!user) return res.status(404).json({ message: "Utilisateur non trouvé" });
             res.json(user);
         } catch (error) {
@@ -29,7 +26,6 @@ export class AuthController {
         }
     };
 
-    // POST /users - Créer un utilisateur (Similaire au register pour l'instant)
     static create = async (req: Request, res: Response) => {
         try {
             const user = this.userRepository.create(req.body);
@@ -40,7 +36,6 @@ export class AuthController {
         }
     };
 
-    // PUT /users/:id - Mettre à jour un utilisateur
     static update = async (req: Request, res: Response) => {
         try {
             const id = req.params.id as string;
@@ -56,7 +51,6 @@ export class AuthController {
         }
     };
 
-    // DELETE /users/:id - Supprimer un utilisateur
     static delete = async (req: Request, res: Response) => {
         try {
             const id = req.params.id as string;
