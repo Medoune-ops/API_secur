@@ -5,7 +5,6 @@ import { User } from "../entities/User";
 
 const router = Router();
 
-// On applique la validation (Etape 4) sur le register
 router.post("/register", validateBody(User), AuthController.register);
 router.post("/login", AuthController.login);
 

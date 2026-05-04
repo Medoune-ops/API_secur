@@ -13,7 +13,7 @@ app.use(express.json());
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 
-// GESTION DES ERREURS (Doit être en dernier)
+// GESTION DES ERREURS  
 app.use(errorHandler);
 
 const PORT = 3000;
