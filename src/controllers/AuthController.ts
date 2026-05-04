@@ -1,70 +1,64 @@
 import { Request, Response } from "express";
 import { AppDataSource } from "../data-source";
 import { User } from "../entities/User";
-import { ObjectId } from "mongodb";
+import * as bcrypt from "bcrypt";
+import * as jwt from "jsonwebtoken";
+import logger from "../utils/logger";
+
+const JWT_SECRET = "ta_cle_secrete_super_securisee_2026"; // À mettre en .env idéalement
 
 export class AuthController {
     private static userRepository = AppDataSource.getMongoRepository(User);
 
-    // GET /users - Récupérer tous les utilisateurs
-    static getAll = async (req: Request, res: Response) => {
-        try {
-            const users = await this.userRepository.find();
-            res.json(users);
-        } catch (error) {
-            res.status(500).json({ message: "Erreur lors de la récupération" });
-        }
-    };
+    // POST /auth/register
+    static register = async (req: Request, res: Response) => {
+        const { email, password } = req.body;
 
-    // GET /users/:id - Récupérer un utilisateur par ID
-    static getOne = async (req: Request, res: Response) => {
         try {
-            const id = req.params.id as string;
-            const user = await this.userRepository.findOneBy({ _id: new ObjectId(id) } as any);
+            // Vérifier si l'user existe déjà
+            const existingUser = await this.userRepository.findOneBy({ email });
+            if (existingUser) return res.status(400).json({ message: "Cet email est déjà utilisé" });
+
+            // Hachage du mot de passe (on ne stocke jamais en clair !)
+            const hashedPassword = await bcrypt.hash(password, 10);
+
+            const user = this.userRepository.create({
+                email,
+                password: hashedPassword
+            });
+
+            await this.userRepository.save(user);
+            logger.info(`Nouvel utilisateur inscrit : ${email}`);
             
-            if (!user) return res.status(404).json({ message: "Utilisateur non trouvé" });
-            res.json(user);
+            res.status(201).json({ message: "Utilisateur créé avec succès" });
         } catch (error) {
-            res.status(400).json({ message: "ID invalide" });
+            res.status(500).json({ message: "Erreur lors de l'inscription" });
         }
     };
 
-    // POST /users - Créer un utilisateur (Similaire au register pour l'instant)
-    static create = async (req: Request, res: Response) => {
-        try {
-            const user = this.userRepository.create(req.body);
-            const result = await this.userRepository.save(user);
-            res.status(201).json(result);
-        } catch (error) {
-            res.status(400).json({ message: "Erreur lors de la création" });
-        }
-    };
+    // POST /auth/login
+    static login = async (req: Request, res: Response) => {
+        const { email, password } = req.body;
 
-    // PUT /users/:id - Mettre à jour un utilisateur
-    static update = async (req: Request, res: Response) => {
         try {
-            const id = req.params.id as string;
-            const result = await this.userRepository.findOneAndUpdate(
-                { _id: new ObjectId(id) },
-                { $set: req.body },
-                { returnDocument: "after" }
+            const user = await this.userRepository.findOneBy({ email });
+            if (!user) return res.status(401).json({ message: "Identifiants incorrects" });
+
+            // Comparaison du mot de passe envoyé avec le hachage en DB
+            const isPasswordValid = await bcrypt.compare(password, user.password);
+            if (!isPasswordValid) return res.status(401).json({ message: "Identifiants incorrects" });
+
+            // Génération du JWT (valable 1 heure)
+            const token = jwt.sign(
+                { userId: user._id, email: user.email },
+                JWT_SECRET,
+                { expiresIn: "1h" }
             );
-            if (!result) return res.status(404).json({ message: "Utilisateur non trouvé" });
-            res.json(result);
-        } catch (error) {
-            res.status(400).json({ message: "Erreur lors de la mise à jour" });
-        }
-    };
 
-    // DELETE /users/:id - Supprimer un utilisateur
-    static delete = async (req: Request, res: Response) => {
-        try {
-            const id = req.params.id as string;
-            const result = await this.userRepository.deleteOne({ _id: new ObjectId(id) });
-            if (result.deletedCount === 0) return res.status(404).json({ message: "Utilisateur non trouvé" });
-            res.json({ message: "Utilisateur supprimé" });
+            logger.info(`Connexion réussie pour : ${email}`);
+            res.json({ token });
         } catch (error) {
-            res.status(400).json({ message: "ID invalide" });
+            res.status(500).json({ message: "Erreur lors de la connexion" });
         }
     };
 }
