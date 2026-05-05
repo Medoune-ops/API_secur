@@ -1,14 +1,14 @@
 import "reflect-metadata";
-import express from "express";
+import app from "./app";
 import { AppDataSource } from "./data-source";
 import authRoutes from "./routes/auth.routes";
 import userRoutes from "./routes/user.routes";
-import { errorHandler } from "./middlewares/error.middleware"; // Import ici
-import logger from "./utils/logger"; // Import ici
+import { errorHandler } from "./middlewares/error.middleware"; 
+import logger from "./utils/logger"; 
+import swaggerUi from "swagger-ui-express";
+import { specs } from "./utils/swagger";
 
-const app = express();
-app.use(express.json());
-
+app.use("/api", swaggerUi.serve, swaggerUi.setup(specs));
 // Routes
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);

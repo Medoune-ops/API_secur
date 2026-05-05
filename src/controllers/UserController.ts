@@ -4,7 +4,9 @@ import { User } from "../entities/User";
 import { ObjectId } from "mongodb";
 
 export class UserController {
-    private static userRepository = AppDataSource.getMongoRepository(User);
+    private static get userRepository() {
+        return AppDataSource.getMongoRepository(User);
+    }
 
     static getAll = async (req: Request, res: Response) => {
         try {
@@ -44,8 +46,8 @@ export class UserController {
                 { $set: req.body },
                 { returnDocument: "after" }
             );
-            if (!result) return res.status(404).json({ message: "Utilisateur non trouvé" });
-            res.json(result);
+            if (!result || !result.value) return res.status(404).json({ message: "Utilisateur non trouvé" });
+            res.json(result.value);
         } catch (error) {
             res.status(400).json({ message: "Erreur lors de la mise à jour" });
         }

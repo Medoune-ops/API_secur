@@ -8,7 +8,9 @@ import logger from "../utils/logger";
 const JWT_SECRET = "ta_cle_secrete_super_securisee_2026"; // À mettre en .env idéalement
 
 export class AuthController {
-    private static userRepository = AppDataSource.getMongoRepository(User);
+    private static get userRepository() {
+        return AppDataSource.getMongoRepository(User);
+    }
 
     // POST /auth/register
     static register = async (req: Request, res: Response) => {
