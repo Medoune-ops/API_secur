@@ -5,7 +5,7 @@ import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import logger from "../utils/logger";
 
-const JWT_SECRET = "ta_cle_secrete_super_securisee_2026"; // À mettre en .env idéalement
+const JWT_SECRET = "Cle"; // À mettre en .env idéalement
 
 export class AuthController {
     private static get userRepository() {

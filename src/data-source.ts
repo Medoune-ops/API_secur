@@ -1,10 +1,12 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { User } from "./entities/User";
+import * as dotenv from "dotenv"; 
+dotenv.config(); // Charge les variables du fichier .env
 
 export const AppDataSource = new DataSource({
     type: "mongodb",
-    url: "mongodb://localhost:27017/API_secur",
+    url: process.env.DATABASE_URL, 
     synchronize: true,
     logging: true,
     entities: [User],
