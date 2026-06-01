@@ -77,9 +77,28 @@ router.post("/", UserController.create);
  *       - in: path
  *         name: id
  *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: "john.doe@example.com"
+ *               password:
+ *                 type: string
+ *                 example: "nouveauMotDePasse123"
  *     responses:
  *       200:
- *         description: Utilisateur mis à jour
+ *         description: Utilisateur mis à jour avec succès
+ *       400:
+ *         description: Erreur lors de la mise à jour
+ *       404:
+ *         description: Utilisateur non trouvé
  */
 router.put("/:id", authGuard, UserController.update);
 

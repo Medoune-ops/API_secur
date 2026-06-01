@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { AppDataSource } from "../data-source";
 import { User } from "../entities/User";
 import { ObjectId } from "mongodb";
+import * as bcrypt from "bcrypt";
 
 export class UserController {
     private static get userRepository() {
@@ -11,7 +12,8 @@ export class UserController {
     static getAll = async (req: Request, res: Response) => {
         try {
             const users = await this.userRepository.find();
-            res.json(users);
+            const safeUsers = users.map(user => { const { password, ...u } = user; return u; });
+            res.json(safeUsers);
         } catch (error) {
             res.status(500).json({ message: "Erreur lors de la récupération" });
         }
@@ -22,7 +24,8 @@ export class UserController {
             const id = req.params.id as string;
             const user = await this.userRepository.findOneBy({ _id: new ObjectId(id) } as any);
             if (!user) return res.status(404).json({ message: "Utilisateur non trouvé" });
-            res.json(user);
+            const { password, ...safeUser } = user;
+            res.json(safeUser);
         } catch (error) {
             res.status(400).json({ message: "ID invalide" });
         }
@@ -30,9 +33,11 @@ export class UserController {
 
     static create = async (req: Request, res: Response) => {
         try {
-            const user = this.userRepository.create(req.body);
-            const result = await this.userRepository.save(user);
-            res.status(201).json(result);
+            const hashedPassword = await bcrypt.hash(req.body.password, 10);
+            const user = this.userRepository.create({ ...req.body, password: hashedPassword });
+            const result = await this.userRepository.save(user) as unknown as User;
+            const { password, ...safeResult } = result;
+            res.status(201).json(safeResult);
         } catch (error) {
             res.status(400).json({ message: "Erreur lors de la création" });
         }
@@ -41,13 +46,18 @@ export class UserController {
     static update = async (req: Request, res: Response) => {
         try {
             const id = req.params.id as string;
+            const updateData = { ...req.body };
+            if (updateData.password) {
+                updateData.password = await bcrypt.hash(updateData.password, 10);
+            }
             const result = await this.userRepository.findOneAndUpdate(
                 { _id: new ObjectId(id) },
-                { $set: req.body },
+                { $set: updateData },
                 { returnDocument: "after" }
             );
-            if (!result || !result.value) return res.status(404).json({ message: "Utilisateur non trouvé" });
-            res.json(result.value);
+            if (!result) return res.status(404).json({ message: "Utilisateur non trouvé" });
+            const { password, ...safeResult } = result as unknown as User;
+            res.json(safeResult);
         } catch (error) {
             res.status(400).json({ message: "Erreur lors de la mise à jour" });
         }

@@ -5,7 +5,8 @@ import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import logger from "../utils/logger";
 
-const JWT_SECRET = "Cle"; // À mettre en .env idéalement
+const JWT_SECRET = process.env.JWT_SECRET!;
+
 
 export class AuthController {
     private static get userRepository() {

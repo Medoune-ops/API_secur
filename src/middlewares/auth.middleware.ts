@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import * as jwt from "jsonwebtoken";
 import logger from "../utils/logger";
 
-const JWT_SECRET = "ta_cle_secrete_super_securisee_2026";
+const JWT_SECRET = process.env.JWT_SECRET!;
 
 export const authGuard = (req: Request, res: Response, next: NextFunction) => {
     // 1. Récupérer le header Authorization (format: "Bearer <token>")
