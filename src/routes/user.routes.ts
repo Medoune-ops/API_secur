@@ -44,29 +44,6 @@ router.get("/:id", authGuard, UserController.getOne);
 
 /**
  * @swagger
- * /users:
- *   post:
- *     summary: Créer un nouvel utilisateur
- *     tags: [Users]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *               password:
- *                 type: string
- *     responses:
- *       201:
- *         description: Utilisateur créé
- */
-router.post("/", UserController.create);
-
-/**
- * @swagger
  * /users/{id}:
  *   put:
  *     summary: Mettre à jour un utilisateur

@@ -31,18 +31,6 @@ export class UserController {
         }
     };
 
-    static create = async (req: Request, res: Response) => {
-        try {
-            const hashedPassword = await bcrypt.hash(req.body.password, 10);
-            const user = this.userRepository.create({ ...req.body, password: hashedPassword });
-            const result = await this.userRepository.save(user) as unknown as User;
-            const { password, ...safeResult } = result;
-            res.status(201).json(safeResult);
-        } catch (error) {
-            res.status(400).json({ message: "Erreur lors de la création" });
-        }
-    };
-
     static update = async (req: Request, res: Response) => {
         try {
             const id = req.params.id as string;
