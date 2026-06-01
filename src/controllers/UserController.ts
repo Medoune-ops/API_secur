@@ -34,9 +34,12 @@ export class UserController {
     static update = async (req: Request, res: Response) => {
         try {
             const id = req.params.id as string;
-            const updateData = { ...req.body };
-            if (updateData.password) {
-                updateData.password = await bcrypt.hash(updateData.password, 10);
+            const { email, password } = req.body;
+            const updateData: Record<string, string> = {};
+            if (email) updateData.email = email;
+            if (password) updateData.password = await bcrypt.hash(password, 10);
+            if (Object.keys(updateData).length === 0) {
+                return res.status(400).json({ message: "Aucun champ valide à mettre à jour" });
             }
             const result = await this.userRepository.findOneAndUpdate(
                 { _id: new ObjectId(id) },
@@ -44,7 +47,7 @@ export class UserController {
                 { returnDocument: "after" }
             );
             if (!result) return res.status(404).json({ message: "Utilisateur non trouvé" });
-            const { password, ...safeResult } = result as unknown as User;
+            const { password: _pwd, ...safeResult } = result as unknown as User;
             res.json(safeResult);
         } catch (error) {
             res.status(400).json({ message: "Erreur lors de la mise à jour" });

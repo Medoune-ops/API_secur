@@ -6,7 +6,10 @@ export const validateBody = (entityClass: any) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         const entityInstance = plainToInstance(entityClass, req.body);
         
-        const errors: ValidationError[] = await validate(entityInstance);
+        const errors: ValidationError[] = await validate(entityInstance, {
+            whitelist: true,
+            forbidNonWhitelisted: true,
+        });
 
         if (errors.length > 0) {
             const formattedErrors = errors.map(err => ({
