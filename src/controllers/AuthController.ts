@@ -32,8 +32,14 @@ export class AuthController {
 
             await this.userRepository.save(user);
             logger.info(`Nouvel utilisateur inscrit : ${email}`);
-            
-            res.status(201).json({ message: "Utilisateur créé avec succès" });
+
+            const token = jwt.sign(
+                { userId: user._id, email: user.email },
+                JWT_SECRET,
+                { expiresIn: "1h" }
+            );
+
+            res.status(201).json({ message: "Utilisateur créé avec succès", token });
         } catch (error) {
             res.status(500).json({ message: "Erreur lors de l'inscription" });
         }
