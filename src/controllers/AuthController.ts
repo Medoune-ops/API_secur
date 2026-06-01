@@ -41,7 +41,8 @@ export class AuthController {
 
             res.status(201).json({ message: "Utilisateur créé avec succès", token });
         } catch (error) {
-            res.status(500).json({ message: "Erreur lors de l'inscription" });
+            logger.error("Erreur register: " + error);
+            res.status(500).json({ message: "Erreur lors de l'inscription", detail: String(error) });
         }
     };
 
@@ -53,11 +54,9 @@ export class AuthController {
             const user = await this.userRepository.findOneBy({ email });
             if (!user) return res.status(401).json({ message: "Identifiants incorrects" });
 
-            // Comparaison du mot de passe envoyé avec le hachage en DB
             const isPasswordValid = await bcrypt.compare(password, user.password);
             if (!isPasswordValid) return res.status(401).json({ message: "Identifiants incorrects" });
 
-            // Génération du JWT (valable 1 heure)
             const token = jwt.sign(
                 { userId: user._id, email: user.email },
                 JWT_SECRET,
@@ -67,7 +66,8 @@ export class AuthController {
             logger.info(`Connexion réussie pour : ${email}`);
             res.json({ token });
         } catch (error) {
-            res.status(500).json({ message: "Erreur lors de la connexion" });
+            logger.error("Erreur login: " + error);
+            res.status(500).json({ message: "Erreur lors de la connexion", detail: String(error) });
         }
     };
 }
