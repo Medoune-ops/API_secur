@@ -1,6 +1,6 @@
 import "dotenv/config";
 import "reflect-metadata";
-import app from "./app";
+import app from "./app.js";
 import { AppDataSource } from "./data-source";
 import authRoutes from "./routes/auth.routes";
 import userRoutes from "./routes/user.routes";
