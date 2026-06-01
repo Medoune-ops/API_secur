@@ -17,7 +17,7 @@ app.use("/users", userRoutes);
 // GESTION DES ERREURS  
 app.use(errorHandler);
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 AppDataSource.initialize()
     .then(() => {
