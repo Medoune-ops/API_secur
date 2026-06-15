@@ -11,7 +11,16 @@ import { specs } from "./utils/swagger";
 import cors from "cors";
 import productRoutes from "./routes/product.routes";
 
-app.use(cors()); // Permet à ton HTML de parler librement à ton API
+app.use(cors({
+    origin: [
+        "http://localhost:3000",
+        "http://localhost:5500",
+        "http://127.0.0.1:5500",
+        "https://site-e-commerce-green.vercel.app",
+    ].filter(Boolean),
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+}));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 // Routes
 app.use("/auth", authRoutes);
@@ -23,7 +32,6 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 
-console.log("DATABASE_URL =", process.env.DATABASE_URL ?? "NON DÉFINIE");
 
 AppDataSource.initialize()
     .then(() => {
