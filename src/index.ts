@@ -23,6 +23,8 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 
+console.log("DATABASE_URL =", process.env.DATABASE_URL ?? "NON DÉFINIE");
+
 AppDataSource.initialize()
     .then(() => {
         logger.info("✅ Connexion à MongoDB réussie");
