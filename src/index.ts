@@ -8,11 +8,15 @@ import { errorHandler } from "./middlewares/error.middleware";
 import logger from "./utils/logger"; 
 import swaggerUi from "swagger-ui-express";
 import { specs } from "./utils/swagger";
+import cors from "cors";
+import productRoutes from "./routes/product.routes";
 
-app.use("/api", swaggerUi.serve, swaggerUi.setup(specs));
+app.use(cors()); // Permet à ton HTML de parler librement à ton API
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 // Routes
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
+app.use("/api/products", productRoutes); // 2. Branchement de la route produit
 
 // GESTION DES ERREURS  
 app.use(errorHandler);
