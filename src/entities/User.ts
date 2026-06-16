@@ -6,6 +6,12 @@ export class User {
     @ObjectIdColumn()
     _id: ObjectId;
 
+    @Column({ nullable: true })
+    name: string;
+
+    @Column({ nullable: true })
+    phone: string;
+
     @Column({ unique: true })
     @IsEmail({}, { message: "L'adresse email n'est pas valide" })
     @IsNotEmpty({ message: "L'email est obligatoire" })

@@ -15,17 +15,17 @@ export class AuthController {
 
     // POST /auth/register
     static register = async (req: Request, res: Response) => {
-        const { email, password } = req.body;
+        const { name, email, password, phone } = req.body;
 
         try {
-            // Vérifier si l'user existe déjà
             const existingUser = await this.userRepository.findOneBy({ email });
             if (existingUser) return res.status(400).json({ message: "Cet email est déjà utilisé" });
 
-            // Hachage du mot de passe (on ne stocke jamais en clair !)
             const hashedPassword = await bcrypt.hash(password, 10);
 
             const user = this.userRepository.create({
+                name,
+                phone,
                 email,
                 password: hashedPassword
             });
