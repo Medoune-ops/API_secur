@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { AuthController } from "../controllers/AuthController";
 import { validateBody } from "../middlewares/validation.middleware";
-import { User } from "../entities/User";
+import { RegisterDto } from "../dto/register.dto";
 
 const router = Router();
 
@@ -42,7 +42,7 @@ const router = Router();
  *       400:
  *         description: Email déjà utilisé ou données invalides
  */
-router.post("/register", validateBody(User), AuthController.register);
+router.post("/register", validateBody(RegisterDto), AuthController.register);
 
 /**
  * @swagger
