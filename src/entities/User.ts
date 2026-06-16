@@ -15,6 +15,12 @@ export class User {
     @MinLength(6, { message: "Le mot de passe doit contenir au moins 6 caractères" })
     password: string;
 
+    @Column({ type: "array", nullable: true, default: [] })
+    cart: object[];
+
+    @Column({ type: "array", nullable: true, default: [] })
+    wishlist: object[];
+
     @CreateDateColumn()
     createdAt: Date;
 }

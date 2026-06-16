@@ -64,4 +64,56 @@ export class UserController {
             res.status(400).json({ message: "ID invalide" });
         }
     };
+
+    static getCart = async (req: Request, res: Response) => {
+        try {
+            const userId = (req as any).user.userId;
+            const user = await this.userRepository.findOneBy({ _id: new ObjectId(userId) } as any);
+            if (!user) return res.status(404).json({ message: "Utilisateur non trouvé" });
+            res.json(user.cart || []);
+        } catch (error) {
+            res.status(500).json({ message: "Erreur lors de la récupération du panier" });
+        }
+    };
+
+    static saveCart = async (req: Request, res: Response) => {
+        try {
+            const userId = (req as any).user.userId;
+            const { cart } = req.body;
+            await this.userRepository.findOneAndUpdate(
+                { _id: new ObjectId(userId) },
+                { $set: { cart } },
+                { returnDocument: "after" }
+            );
+            res.json({ message: "Panier sauvegardé" });
+        } catch (error) {
+            res.status(500).json({ message: "Erreur lors de la sauvegarde du panier" });
+        }
+    };
+
+    static getWishlist = async (req: Request, res: Response) => {
+        try {
+            const userId = (req as any).user.userId;
+            const user = await this.userRepository.findOneBy({ _id: new ObjectId(userId) } as any);
+            if (!user) return res.status(404).json({ message: "Utilisateur non trouvé" });
+            res.json(user.wishlist || []);
+        } catch (error) {
+            res.status(500).json({ message: "Erreur lors de la récupération des favoris" });
+        }
+    };
+
+    static saveWishlist = async (req: Request, res: Response) => {
+        try {
+            const userId = (req as any).user.userId;
+            const { wishlist } = req.body;
+            await this.userRepository.findOneAndUpdate(
+                { _id: new ObjectId(userId) },
+                { $set: { wishlist } },
+                { returnDocument: "after" }
+            );
+            res.json({ message: "Favoris sauvegardés" });
+        } catch (error) {
+            res.status(500).json({ message: "Erreur lors de la sauvegarde des favoris" });
+        }
+    };
 }

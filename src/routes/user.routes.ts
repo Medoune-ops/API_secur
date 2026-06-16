@@ -97,4 +97,9 @@ router.put("/:id", authGuard, UserController.update);
  */
 router.delete("/:id", authGuard, UserController.delete);
 
+router.get("/me/cart", authGuard, UserController.getCart);
+router.post("/me/cart", authGuard, UserController.saveCart);
+router.get("/me/wishlist", authGuard, UserController.getWishlist);
+router.post("/me/wishlist", authGuard, UserController.saveWishlist);
+
 export default router;
