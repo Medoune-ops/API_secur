@@ -21,6 +21,15 @@ export class User {
     @MinLength(6, { message: "Le mot de passe doit contenir au moins 6 caractères" })
     password: string;
 
+    @Column({ default: "user" })
+    role: string;
+
+    @Column({ nullable: true })
+    shopName?: string;
+
+    @Column({ nullable: true })
+    shopDescription?: string;
+
     @Column({ type: "array", nullable: true, default: [] })
     cart: object[];
 

@@ -34,7 +34,7 @@ export class AuthController {
             logger.info(`Nouvel utilisateur inscrit : ${email}`);
 
             const token = jwt.sign(
-                { userId: user._id, email: user.email },
+                { userId: user._id.toString(), email: user.email, name: user.name, role: user.role, shopName: user.shopName },
                 JWT_SECRET,
                 { expiresIn: "1h" }
             );
@@ -58,7 +58,7 @@ export class AuthController {
             if (!isPasswordValid) return res.status(401).json({ message: "Identifiants incorrects" });
 
             const token = jwt.sign(
-                { userId: user._id, email: user.email },
+                { userId: user._id.toString(), email: user.email, name: user.name, role: user.role, shopName: user.shopName },
                 JWT_SECRET,
                 { expiresIn: "1h" }
             );

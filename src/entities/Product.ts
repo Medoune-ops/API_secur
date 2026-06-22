@@ -23,6 +23,9 @@ export class Product {
     @Column({ default: 0 })
     reviewsCount!: number;
 
+    @Column({ default: 0 })
+    stock!: number;
+
     @CreateDateColumn()
     createdAt!: Date;
 }

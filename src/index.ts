@@ -22,10 +22,13 @@ app.use(cors({
     credentials: true,
 }));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+import orderRoutes from "./routes/order.routes";
+
 // Routes
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
-app.use("/api/products", productRoutes); // 2. Branchement de la route produit
+app.use("/api/products", productRoutes); 
+app.use("/api/orders", orderRoutes);
 
 // GESTION DES ERREURS  
 app.use(errorHandler);

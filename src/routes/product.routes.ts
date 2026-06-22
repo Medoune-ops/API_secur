@@ -1,13 +1,17 @@
 import { Router } from "express";
 import { ProductController } from "../controllers/ProductController";
+import { authGuard } from "../middlewares/auth.middleware";
+import { vendorGuard } from "../middlewares/vendor.middleware";
 
 const router = Router();
 const productController = new ProductController();
 
-// Route pour récupérer tous les produits
+// Route publique
 router.get("/", productController.getAllProducts);
 
-// Route pour ajouter un produit (Utile pour remplir ta base)
-router.post("/", productController.createProduct);
+// Routes protégées (vendeurs uniquement)
+router.post("/", authGuard, vendorGuard, productController.createProduct);
+router.put("/:id", authGuard, vendorGuard, productController.updateProduct);
+router.delete("/:id", authGuard, vendorGuard, productController.deleteProduct);
 
 export default router;

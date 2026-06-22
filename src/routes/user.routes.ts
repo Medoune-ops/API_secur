@@ -102,4 +102,6 @@ router.post("/me/cart", authGuard, UserController.saveCart);
 router.get("/me/wishlist", authGuard, UserController.getWishlist);
 router.post("/me/wishlist", authGuard, UserController.saveWishlist);
 
+router.post("/me/become-vendor", authGuard, UserController.becomeVendor);
+
 export default router;
