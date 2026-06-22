@@ -2,8 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import * as jwt from "jsonwebtoken";
 import logger from "../utils/logger";
 
-const JWT_SECRET = process.env.JWT_SECRET!;
-
 export const authGuard = (req: Request, res: Response, next: NextFunction) => {
     // 1. Récupérer le header Authorization (format: "Bearer <token>")
     const authHeader = req.headers.authorization;
@@ -18,7 +16,7 @@ export const authGuard = (req: Request, res: Response, next: NextFunction) => {
 
     try {
         // 3. Vérifier le token
-        const decoded = jwt.verify(token, JWT_SECRET);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET!);
         
         // 4. Stocker les infos du user dans la requête pour les utiliser plus tard
         (req as any).user = decoded;

@@ -5,9 +5,6 @@ import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import logger from "../utils/logger";
 
-const JWT_SECRET = process.env.JWT_SECRET!;
-
-
 export class AuthController {
     private static get userRepository() {
         return AppDataSource.getMongoRepository(User);
@@ -35,7 +32,7 @@ export class AuthController {
 
             const token = jwt.sign(
                 { userId: user._id.toString(), email: user.email, name: user.name, role: user.role, shopName: user.shopName },
-                JWT_SECRET,
+                process.env.JWT_SECRET!,
                 { expiresIn: "1h" }
             );
 
@@ -59,7 +56,7 @@ export class AuthController {
 
             const token = jwt.sign(
                 { userId: user._id.toString(), email: user.email, name: user.name, role: user.role, shopName: user.shopName },
-                JWT_SECRET,
+                process.env.JWT_SECRET!,
                 { expiresIn: "1h" }
             );
 
