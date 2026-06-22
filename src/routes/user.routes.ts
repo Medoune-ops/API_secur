@@ -20,6 +20,12 @@ const router = Router();
  */
 router.get("/", authGuard, UserController.getAll);
 
+router.get("/me/cart", authGuard, UserController.getCart);
+router.post("/me/cart", authGuard, UserController.saveCart);
+router.get("/me/wishlist", authGuard, UserController.getWishlist);
+router.post("/me/wishlist", authGuard, UserController.saveWishlist);
+router.post("/me/become-vendor", authGuard, UserController.becomeVendor);
+
 /**
  * @swagger
  * /users/{id}:
@@ -96,12 +102,5 @@ router.put("/:id", authGuard, UserController.update);
  *         description: Utilisateur supprimé
  */
 router.delete("/:id", authGuard, UserController.delete);
-
-router.get("/me/cart", authGuard, UserController.getCart);
-router.post("/me/cart", authGuard, UserController.saveCart);
-router.get("/me/wishlist", authGuard, UserController.getWishlist);
-router.post("/me/wishlist", authGuard, UserController.saveWishlist);
-
-router.post("/me/become-vendor", authGuard, UserController.becomeVendor);
 
 export default router;

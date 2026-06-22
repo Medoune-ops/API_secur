@@ -4,7 +4,7 @@ import { Product } from "../entities/Product";
 import { ObjectId } from "mongodb";
 
 export class ProductController {
-    private productRepository = AppDataSource.getRepository(Product);
+    private productRepository = AppDataSource.getMongoRepository(Product);
 
     // GET /api/products
     getAllProducts = async (req: Request, res: Response): Promise<void> => {

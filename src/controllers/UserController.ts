@@ -5,7 +5,6 @@ import { ObjectId } from "mongodb";
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET!;
 
 export class UserController {
     private static get userRepository() {
@@ -156,7 +155,7 @@ export class UserController {
 
             const token = jwt.sign(
                 { userId: user._id.toString(), email: user.email, name: user.name, role: user.role, shopName: user.shopName },
-                JWT_SECRET,
+                process.env.JWT_SECRET!,
                 { expiresIn: "1h" }
             );
 
