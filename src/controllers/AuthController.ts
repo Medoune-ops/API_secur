@@ -33,7 +33,7 @@ export class AuthController {
             const token = jwt.sign(
                 { userId: user._id.toString(), email: user.email, name: user.name, role: user.role, shopName: user.shopName },
                 process.env.JWT_SECRET!,
-                { expiresIn: "1h" }
+                { expiresIn: "30d" }
             );
 
             res.status(201).json({ message: "Utilisateur créé avec succès", token });
@@ -57,7 +57,7 @@ export class AuthController {
             const token = jwt.sign(
                 { userId: user._id.toString(), email: user.email, name: user.name, role: user.role, shopName: user.shopName },
                 process.env.JWT_SECRET!,
-                { expiresIn: "1h" }
+                { expiresIn: "30d" }
             );
 
             logger.info(`Connexion réussie pour : ${email}`);

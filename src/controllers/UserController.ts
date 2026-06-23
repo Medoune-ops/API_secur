@@ -156,7 +156,7 @@ export class UserController {
             const token = jwt.sign(
                 { userId: user._id.toString(), email: user.email, name: user.name, role: user.role, shopName: user.shopName },
                 process.env.JWT_SECRET!,
-                { expiresIn: "1h" }
+                { expiresIn: "30d" }
             );
 
             res.json({ message: "Vous êtes maintenant vendeur", token });
